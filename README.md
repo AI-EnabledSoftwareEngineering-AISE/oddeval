@@ -56,14 +56,19 @@ Key goals of this project included:
 - Enhancing throughput and reducing memory consumption
 - Supporting mixed-precision computation for model efficiency
 
-### Device Management
+---
+
+## Device Management
 
 ```python
 device = torch.device('xpu' if torch.xpu.is_available() else 'cpu')
 print(f"Your device is set to: {device}")
 ```
 
-### Model Precision Handling
+---
+
+## Model Precision Handling
+
 ```python
 if cfg.TRAINER.PROMPTSRC.PREC == "fp16":
     clip_model.half()
@@ -73,21 +78,85 @@ else:
     self.dtype = torch.float32
 ```
 
-### Optimizations with IPEX
+---
+
+## Optimizations with IPEX
+
 ```python
 import intel_extension_for_pytorch as ipex
-self.model, self.optim = ipex.optimize(self.model, optimizer=self.optim, auto_kernel_selection=False)
+
+# Optimize student model
+self.model, self.optim = ipex.optimize(
+    self.model,
+    optimizer=self.optim,
+    auto_kernel_selection=False
+)
 ```
 
-### Device and Data Type Transfer After Optimization
+---
+
+## Device and Data Type Transfer After Optimization
+
 ```python
+# Apply correct device and precision after optimization
 self.model.to(device, dtype=self.dtype)
 ```
 
-### Teacher Model Adaptations for PromptKD
+---
+
+## Teacher Model Adaptations for PromptKD
+
 ```python
+# Load and prepare teacher model
 clip_model_teacher = load_clip_to_cpu_teacher(cfg)
 self.model_teacher = CustomCLIP_teacher(cfg, classnames, clip_model_teacher)
 self.model_teacher.to(device)
 self.model_teacher.eval()
+
+# Optimize teacher model with IPEX
+self.model_teacher, _ = ipex.optimize(
+    self.model_teacher,
+    optimizer=self.optim,
+    auto_kernel_selection=False
+)
 ```
+
+---
+
+## Performance Summary
+
+| Metric                                 | Result                         |
+|----------------------------------------|--------------------------------|
+| Inference Throughput                   | +20–30%                        |
+| Memory Efficiency                      | Improved; larger batch sizes   |
+| Training Speed (PromptSRC, PromptKD)   | Accelerated                    |
+| Integration                            | Seamless XPU & precision aware |
+
+---
+
+## Repository Structure
+
+```plaintext
+📁 configs/
+📁 models/
+📁 scripts/
+│   ├── train.py
+│   ├── evaluate.py
+│   └── optimize_with_ipex.py
+📄 README.md
+```
+
+
+---
+
+## Use Case
+
+This framework is optimized for **high-performance multimodal dataset evaluation**, especially in **safety-critical applications** like **autonomous driving**. It demonstrates how Intel’s ecosystem can boost throughput, reduce memory overhead, and streamline distillation-based learning strategies.
+
+---
+
+## Acknowledgments
+
+This work was supported by **Intel OneAPI Center of Excellence**.
+
+Special thanks to **David Demarle** and the **Intel Rendering Team (OSPRay/OSPRay Studio)** for infrastructure and mentorship that enabled successful integration of IPEX on **Intel® Tiber™ AI Cloud**.
