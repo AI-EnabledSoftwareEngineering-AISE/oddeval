@@ -50,7 +50,7 @@ This project was built and tested on **Intel® Tiber™ AI Cloud** using **Intel
 
 Key goals of this project included:
 
-- Benchmarking Intel’s software-hardware stack for multimodal AI pipelines
+- Benchmarking Intel's software-hardware stack for multimodal AI pipelines
 - Applying IPEX optimizations to models and optimizers
 - Supporting XPU architecture for dynamic device assignment
 - Enhancing throughput and reducing memory consumption
@@ -137,21 +137,40 @@ self.model_teacher, _ = ipex.optimize(
 ## Repository Structure
 
 ```plaintext
-📁 configs/
-📁 models/
-📁 scripts/
-│   ├── train.py
-│   ├── evaluate.py
-│   └── optimize_with_ipex.py
-📄 README.md
+📁 PromptsLearniong/
+│   ├── 📁 configs/           # Configuration files
+│   ├── 📁 datasets/         # Dataset handling and processing
+│   ├── 📁 docs/            # Documentation
+│   ├── 📁 images/          # Image assets
+│   ├── 📁 interpret_prompts/ # Prompt interpretation utilities
+│   ├── 📁 lpclip/          # CLIP model implementations
+│   ├── 📁 scripts/         # Utility scripts
+│   ├── 📁 teacher_model/   # Teacher model implementations
+│   ├── 📁 trainers/        # Training utilities
+│   ├── 📄 train.py         # Main training script
+│   └── 📄 requirements.txt  # Project dependencies
+
+📄 roadway_user_prompts.md   # Road user-related prompts
+📄 lane_markings_prompts.md  # Lane marking-related prompts
+📄 RAG-llama.ipynb          # RAG implementation with LLaMA
+📄 survay.ipynb             # Survey analysis notebook
+📄 test_all_blip_user.py    # BLIP model testing script
+📄 result_blip.ipynb        # BLIP results analysis
 ```
 
+---
+
+### Performance Optimization
+- Use `torch.xpu` for device management
+- Enable mixed precision training with IPEX
+- Utilize Intel® oneAPI DPC++/C++ Compiler for custom operations
+- Enable Intel® MKL optimizations for numerical computations
 
 ---
 
 ## Use Case
 
-This framework is optimized for **high-performance multimodal dataset evaluation**, especially in **safety-critical applications** like **autonomous driving**. It demonstrates how Intel’s ecosystem can boost throughput, reduce memory overhead, and streamline distillation-based learning strategies.
+This framework is optimized for **high-performance multimodal dataset evaluation**, especially in **safety-critical applications** like **autonomous driving**. It demonstrates how Intel's ecosystem can boost throughput, reduce memory overhead, and streamline distillation-based learning strategies.
 
 ---
 
